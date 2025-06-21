@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import PasskeyWallet from '@yuesth/passkey-wallet-stellar';
 import { Horizon, TransactionBuilder, Operation, Networks, Asset } from '@stellar/stellar-sdk';
+import Link from 'next/link';
+import ChatModal, { ChatFloatingButton } from '@/components/chat/ChatModal';
 
 // The secret key of the account we created to fund new wallets.
 // This is read from an environment variable.
@@ -36,6 +38,12 @@ export default function Home() {
 
     // For the error popup
     const [transferError, setTransferError] = useState<string | null>(null);
+    
+    // Chat modal state
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    
+    // Login attempt state
+    const [loginAttemptError, setLoginAttemptError] = useState<string | null>(null);
 
     // On page load, load the list of wallets from local storage
     useEffect(() => {
@@ -122,6 +130,7 @@ export default function Home() {
         }
 
         setIsBusy(true);
+        setLoginAttemptError(null);
         setStatus(`Logging in to '${selectedWalletName}'...`);
 
         try {
@@ -140,8 +149,22 @@ export default function Home() {
 
         } catch (error) {
             console.error(error);
-            const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
-            setStatus(`Error: ${errorMessage}`);
+            let errorMessage = "An unknown error occurred.";
+            
+            if (error instanceof Error) {
+                if (error.message.includes('NotAllowedError') || error.message.includes('passkey')) {
+                    errorMessage = "Passkey doğrulaması başarısız. Lütfen doğru passkey ile tekrar deneyin veya tarayıcı ayarlarınızı kontrol edin.";
+                } else if (error.message.includes('AbortError')) {
+                    errorMessage = "İşlem iptal edildi. Passkey doğrulamasını tamamlamak için tekrar deneyin.";
+                } else if (error.message.includes('InvalidStateError')) {
+                    errorMessage = "Bu cihazda bu wallet için kayıtlı passkey bulunamadı.";
+                } else {
+                    errorMessage = error.message;
+                }
+            }
+            
+            setLoginAttemptError(errorMessage);
+            setStatus(`Login Error: ${errorMessage}`);
         } finally {
             setIsBusy(false);
         }
@@ -221,6 +244,7 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-900 text-white">
+            {/* Transfer Error Popup */}
             {transferError && (
                 <div className="fixed top-5 right-5 w-80 bg-red-800 border border-red-600 text-white p-4 rounded-lg shadow-lg z-50">
                     <div className="flex justify-between items-center mb-2">
@@ -228,6 +252,20 @@ export default function Home() {
                         <button onClick={() => setTransferError(null)} className="text-2xl font-bold leading-none hover:text-gray-300">&times;</button>
                     </div>
                     <p className="text-sm">{transferError}</p>
+                </div>
+            )}
+            
+            {/* Login Error Popup */}
+            {loginAttemptError && (
+                <div className="fixed top-5 left-5 w-80 bg-orange-800 border border-orange-600 text-white p-4 rounded-lg shadow-lg z-50">
+                    <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-bold">Login Failed</h4>
+                        <button onClick={() => setLoginAttemptError(null)} className="text-2xl font-bold leading-none hover:text-gray-300">&times;</button>
+                    </div>
+                    <p className="text-sm">{loginAttemptError}</p>
+                    <div className="mt-2 text-xs text-orange-200">
+                        💡 İpucu: Passkey doğrulaması için parmak izi, yüz tanıma veya PIN kullanabilirsiniz.
+                    </div>
                 </div>
             )}
             <div className="z-10 w-full max-w-2xl items-center justify-between font-mono text-sm flex flex-col gap-6">
@@ -295,7 +333,59 @@ export default function Home() {
                         </button>
                     </form>
                 )}
+
+                {/* AI Assistant Info */}
+                <div className="w-full p-6 bg-gradient-to-r from-purple-800 to-blue-800 rounded-lg">
+                    <div className="text-center">
+                        <h3 className="text-lg font-semibold mb-2">🤖 AI Assistant</h3>
+                        <p className="text-gray-300 mb-4 text-sm">
+                            Stellar AI Assistant ile bakiye sorgulayın ve transfer işlemlerinizi kolaylaştırın!
+                        </p>
+                        {activeWallet ? (
+                            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                                <button 
+                                    onClick={() => setIsChatOpen(true)}
+                                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105"
+                                >
+                                    💬 Hemen Konuş
+                                </button>
+                                <Link 
+                                    href="/ai-chat" 
+                                    className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105"
+                                >
+                                    📱 Tam Sayfa
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="text-center">
+                                <div className="bg-yellow-900/30 border border-yellow-600 rounded-lg p-4 mb-3">
+                                    <p className="text-yellow-200 text-sm mb-2">
+                                        🔒 AI Assistant'ı kullanmak için giriş yapmanız gerekiyor
+                                    </p>
+                                    <p className="text-yellow-300 text-xs">
+                                        Güvenliğiniz için AI Assistant sadece kimlik doğrulaması yapılmış kullanıcılara açıktır.
+                                    </p>
+                                </div>
+                                <div className="text-gray-400 text-xs">
+                                    ↑ Yukarıdan giriş yapın veya yeni wallet oluşturun
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
+            
+            {/* Floating Chat Button - only show when modal is closed and user is logged in */}
+            {!isChatOpen && activeWallet && <ChatFloatingButton onClick={() => setIsChatOpen(true)} />}
+            
+            {/* Chat Modal - only available for logged in users */}
+            {activeWallet && (
+                <ChatModal 
+                    isOpen={isChatOpen} 
+                    onClose={() => setIsChatOpen(false)}
+                    activeWallet={activeWallet}
+                />
+            )}
         </main>
     );
 }
