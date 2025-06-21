@@ -99,15 +99,23 @@ export default function TransferHandler({ transferDetails, onComplete, onCancel 
           </h4>
           
           <div className="bg-gray-50 rounded p-3 mb-3 text-sm">
-            <div className="grid grid-cols-2 gap-2">
-              <div><strong>Gönderen:</strong></div>
-              <div className="font-mono text-xs break-all">{transferDetails.from}</div>
-              <div><strong>Alıcı:</strong></div>
-              <div className="font-mono text-xs break-all">{transferDetails.to}</div>
-              <div><strong>Miktar:</strong></div>
-              <div>{transferDetails.amount} {transferDetails.asset}</div>
-              <div><strong>Wallet:</strong></div>
-              <div>{transferDetails.walletName}</div>
+            <div className="space-y-2">
+              <div>
+                <strong>Gönderen:</strong>
+                <div className="font-mono text-xs break-all bg-white p-1 rounded mt-1 overflow-hidden">
+                  {transferDetails.from.slice(0, 10)}...{transferDetails.from.slice(-10)}
+                </div>
+              </div>
+              <div>
+                <strong>Alıcı:</strong>
+                <div className="font-mono text-xs break-all bg-white p-1 rounded mt-1 overflow-hidden">
+                  {transferDetails.to.slice(0, 10)}...{transferDetails.to.slice(-10)}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div><strong>Miktar:</strong> {transferDetails.amount} {transferDetails.asset}</div>
+                <div><strong>Wallet:</strong> {transferDetails.walletName}</div>
+              </div>
             </div>
           </div>
 

@@ -96,11 +96,11 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
                   key={message.id}
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div
-                    className={`flex items-start space-x-2 max-w-[85%] ${
-                      message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                    }`}
-                  >
+                                     <div
+                     className={`flex items-start space-x-2 max-w-[90%] ${
+                       message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                     }`}
+                   >
                     <div
                       className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
                         message.role === 'user'
@@ -115,23 +115,23 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
                       )}
                     </div>
                     
-                    <div
-                      className={`rounded-lg p-2 text-sm ${
-                        message.role === 'user'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white border border-gray-200 text-gray-800'
-                      }`}
-                    >
-                      <div className="whitespace-pre-wrap">{message.content}</div>
+                                         <div
+                       className={`rounded-lg p-2 text-sm break-words overflow-hidden ${
+                         message.role === 'user'
+                           ? 'bg-blue-500 text-white'
+                           : 'bg-white border border-gray-200 text-gray-800'
+                       }`}
+                     >
+                                             <div className="whitespace-pre-wrap break-words overflow-wrap-anywhere max-w-full">{message.content}</div>
                       
                       {/* Tool Invocations Display */}
-                      {message.toolInvocations && message.toolInvocations.length > 0 && (
-                        <div className="mt-2 space-y-1">
-                          {message.toolInvocations.map((tool, index) => (
-                            <div key={index} className="bg-gray-100 rounded p-1 text-xs">
-                              <div className="font-medium text-gray-700 mb-1">
-                                🔧 {tool.toolName === 'checkBalance' ? 'Bakiye Kontrolü' : 'Transfer İşlemi'}
-                              </div>
+                                               {message.toolInvocations && message.toolInvocations.length > 0 && (
+                           <div className="mt-2 space-y-1 max-w-full">
+                             {message.toolInvocations.map((tool, index) => (
+                               <div key={index} className="bg-gray-100 rounded p-1 text-xs overflow-hidden">
+                                 <div className="font-medium text-gray-700 mb-1">
+                                   🔧 {tool.toolName === 'checkBalance' ? 'Bakiye Kontrolü' : 'Transfer İşlemi'}
+                                 </div>
                                                        {tool.state === 'result' && tool.result && (
                            <div className="text-gray-600">
                              {(tool.result as any).requiresPasskeyAuth ? (
@@ -150,9 +150,11 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
                                  onCancel={() => setPendingTransfer(null)}
                                />
                              ) : (
-                               <pre className="whitespace-pre-wrap text-xs">
-                                 {JSON.stringify(tool.result, null, 2)}
-                               </pre>
+                                                               <div className="text-xs break-words overflow-hidden">
+                                  <pre className="whitespace-pre-wrap break-all max-w-full overflow-x-auto text-wrap">
+                                    {JSON.stringify(tool.result, null, 2)}
+                                  </pre>
+                                </div>
                              )}
                            </div>
                          )}
