@@ -27,7 +27,7 @@ Follow these instructions to set up and run the project locally.
 
 1.  Clone the repository:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/murathanje/Sirius_Stellar_Hack
     cd Sirius_Stellar_Hack
     ```
 
