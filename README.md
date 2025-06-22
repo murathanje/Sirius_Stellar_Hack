@@ -1,5 +1,16 @@
 # Sirius Stellar AI Chat - A Passkey-Powered Agentic Wallet
 
+
+![Sirius Stellar AI Chat](/public/BANNER.png)
+
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Stellar](https://img.shields.io/badge/Stellar-Protocol-7D00FF?style=for-the-badge&logo=stellar)](https://stellar.org/)
+
+
+
+
 This project is a Next.js application that implements a modern, secure, and intelligent Stellar wallet. It functions as an **Agentic Wallet**, where an AI assistant, powered by Google's Gemini 2.0 Flash model, can perform blockchain operations based on conversational commands from the user.
 
 The core security of the wallet is built on **Passkey technology**, eliminating the need for traditional passwords or seed phrases. Users can create and access their wallets using device-level biometrics (like fingerprint or face ID) or a PIN.
@@ -14,7 +25,54 @@ The core security of the wallet is built on **Passkey technology**, eliminating 
 - **Modern UI**: A clean and intuitive interface for managing your account, viewing your balance, and sending transfers manually.
 - ** Client-Side Security**: Secret keys are never exposed to the server for transfers; all transactions initiated by the AI are signed on the client-side using the passkey credential.
 
-## Getting Started
+## 🏗️ Architecture
+
+
+### Backend & APIs
+- **Stellar SDK**: Official Stellar blockchain integration
+- **Google Gemini AI**: Advanced AI model for natural language processing
+- **Passkey Wallet**: Secure wallet management with WebAuthn
+- **Horizon API**: Stellar network interaction
+
+### Frontend Stack
+- **Next.js 15**: React framework with App Router
+- **TypeScript**: Type-safe development
+- **Tailwind CSS 4**: Utility-first CSS framework
+
+### Security Architecture
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   User Device   │    │   AI Assistant  │    │  Stellar Network│
+│                 │    │                 │    │                 │
+│ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
+│ │   Passkey   │ │    │ │   Gemini    │ │    │ │   Horizon   │ │
+│ │  (Local)    │ │    │ │    2.0      │ │    │ │     API     │ │
+│ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
+│                 │    │                 │    │                 │
+│ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
+│ │   Wallet    │ │◄──►│ │   Chat API  │ │◄──►│ │  Blockchain │ │
+│ │  (Client)   │ │    │ │             │ │    │ │             │ │
+│ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+## 📱 Application Structure
+
+### Main Pages
+- **Home Screen**: Wallet overview with balance and wallet management
+- **Send Screen**: Manual transfer interface with address validation
+- **AI Chat**: Conversational interface for blockchain operations
+- **Account**: Wallet information and logout functionality
+
+### Components
+- **BottomNavbar**: Mobile-friendly navigation
+- **ChatInterface**: Full-screen AI chat interface
+- **ChatModal**: Floating AI chat modal
+- **TransferHandler**: Secure transaction confirmation
+
+## 🛠️ Installation & Setup
+
+
 
 Follow these instructions to set up and run the project locally.
 
