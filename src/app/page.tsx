@@ -5,8 +5,8 @@ import PasskeyWallet from '@yuesth/passkey-wallet-stellar';
 import { Horizon, TransactionBuilder, Operation, Networks, Asset } from '@stellar/stellar-sdk';
 import Link from 'next/link';
 import Image from 'next/image';
-import ChatModal, { ChatFloatingButton } from '@/components/chat/ChatModal';
-import { Bot, Wallet, Send, Shield, ArrowRight, Lock, AlertTriangle } from 'lucide-react';
+import { Wallet, Send, Bot, User, ArrowRight, Lock, AlertTriangle } from 'lucide-react';
+import BottomNavbar from '@/components/BottomNavbar';
 
 // The secret key of the account we created to fund new wallets.
 // This is read from an environment variable.
@@ -34,17 +34,7 @@ export default function Home() {
     const [activeWallet, setActiveWallet] = useState<WalletInfo | null>(null);
     const [balance, setBalance] = useState<string | null>(null);
 
-    // For the transfer form
-    const [destination, setDestination] = useState('');
-    const [amount, setAmount] = useState('');
-
     // For the error popup
-    const [transferError, setTransferError] = useState<string | null>(null);
-    
-    // Chat modal state
-    const [isChatOpen, setIsChatOpen] = useState(false);
-    
-    // Login attempt state
     const [loginAttemptError, setLoginAttemptError] = useState<string | null>(null);
 
     // On page load, load the list of wallets from local storage
@@ -58,6 +48,13 @@ export default function Home() {
             }
         }
     }, []);
+
+    // Fetch balance when activeWallet changes
+    useEffect(() => {
+        if (activeWallet) {
+            fetchBalance(activeWallet.address);
+        }
+    }, [activeWallet]);
 
     const fetchBalance = async (publicKey: string) => {
         try {
@@ -172,91 +169,8 @@ export default function Home() {
         }
     }
 
-    const handleLogout = () => {
-        setActiveWallet(null);
-        setBalance(null);
-        setStatus("You have been logged out. Select a wallet to log in again.");
-    }
-
-    const handleTransfer = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setTransferError(null); // Clear previous errors before a new attempt
-
-        if (!activeWallet || !destination || !amount) {
-            alert("Please log in and fill in all transfer details.");
-            return;
-        }
-
-        setIsBusy(true);
-        setStatus(`Preparing to send ${amount} XLM from '${activeWallet.name}'...`);
-
-        try {
-            const wallet = getWalletInstance();
-            await wallet.createFromExistingPasskey({ phrase: activeWallet.name });
-            const sourceKeyPair = wallet.keyPair;
-
-            if (!sourceKeyPair) throw new Error("Could not get keypair for signing.");
-
-            const sourceAccount = await server.loadAccount(activeWallet.address);
-            const transaction = new TransactionBuilder(sourceAccount, {
-                fee: await server.fetchBaseFee().then(fee => fee.toString()),
-                networkPassphrase: Networks.TESTNET,
-            })
-            .addOperation(Operation.payment({
-                destination,
-                asset: Asset.native(),
-                amount,
-            }))
-            .setTimeout(30)
-            .build();
-            
-            transaction.sign(sourceKeyPair);
-
-            const txResult = await server.submitTransaction(transaction);
-            setStatus(`Success! Transaction sent: ${txResult.hash}`);
-            fetchBalance(activeWallet.address);
-            setDestination('');
-            setAmount('');
-
-        } catch (error) {
-            // Log the error for debugging without triggering the Next.js error overlay.
-            console.log("Transfer failed:", error);
-
-            const userFriendlyMessage = "Transaction could not be completed. The network rejected it. Please check the destination address and ensure you have sufficient funds.";
-            setTransferError(userFriendlyMessage);
-
-            let detailedStatus = "An unknown error occurred.";
-            if (error instanceof Error) {
-                if ('response' in error && (error as any).response?.data) {
-                    const errorData = (error as any).response.data;
-                    detailedStatus = `Horizon Error: ${errorData.title}. ${errorData.detail || ''}`;
-                    const resultCodes = errorData.extras?.result_codes;
-                    if(resultCodes) {
-                        detailedStatus += ` (Tx: ${resultCodes.transaction}, Op: ${resultCodes.operations?.[0]})`;
-                    }
-                } else {
-                    detailedStatus = error.message;
-                }
-            }
-            setStatus(`Error: ${detailedStatus}`);
-        } finally {
-            setIsBusy(false);
-        }
-    }
-
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-neutral-900 text-neutral-100">
-            {/* Transfer Error Popup */}
-            {transferError && (
-                <div className="fixed top-5 right-5 w-80 bg-neutral-800 border border-neutral-700 text-neutral-200 p-4 rounded-xl shadow-2xl z-50 backdrop-blur-sm">
-                    <div className="flex justify-between items-center mb-2">
-                        <h4 className="font-semibold text-neutral-100">İşlem Başarısız</h4>
-                        <button onClick={() => setTransferError(null)} className="text-2xl font-bold leading-none hover:text-neutral-400 transition-colors">&times;</button>
-                    </div>
-                    <p className="text-sm text-neutral-300">{transferError}</p>
-                </div>
-            )}
-            
+        <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-neutral-900 text-neutral-100 pb-24">
             {/* Login Error Popup */}
             {loginAttemptError && (
                 <div className="fixed top-5 left-5 w-80 bg-neutral-800 border border-neutral-700 text-neutral-200 p-4 rounded-xl shadow-2xl z-50 backdrop-blur-sm">
@@ -302,15 +216,9 @@ export default function Home() {
                     </div>
                 ) : (
                     <div className="w-full p-8 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 flex flex-col gap-6">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-2xl font-semibold text-neutral-100">Giriş yapıldı: <span className="font-bold text-[#FD973E]">{activeWallet.name}</span></h2>
-                            <button onClick={handleLogout} disabled={isBusy} className="px-6 py-3 bg-neutral-700 hover:bg-neutral-600 rounded-xl transition-all font-semibold disabled:bg-neutral-800 disabled:cursor-not-allowed text-neutral-100 shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600">
-                                Çıkış Yap
-                            </button>
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-neutral-300 mb-2">Adres:</h3>
-                            <p className="font-mono text-sm text-[#D856FB] break-all bg-neutral-700 p-3 rounded-lg border border-neutral-600">{activeWallet.address}</p>
+                        <div className="text-center">
+                            <h2 className="text-2xl font-semibold text-neutral-100 mb-4">Hoş Geldiniz!</h2>
+                            <p className="text-neutral-300 mb-6">{activeWallet.name}</p>
                         </div>
                     </div>
                 )}
@@ -326,84 +234,10 @@ export default function Home() {
                         </div>
                     )}
                 </div>
-
-                {/* Transfer Form */}
-                {activeWallet && (
-                    <form onSubmit={handleTransfer} className="w-full flex flex-col gap-6 p-8 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700">
-                        <h3 className="text-2xl font-semibold text-center text-neutral-100">Ödeme Gönder</h3>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="destination" className="text-neutral-300 font-medium">Hedef Adres</label>
-                            <input id="destination" type="text" value={destination} onChange={(e) => setDestination(e.target.value)} className="px-4 py-3 bg-neutral-700 rounded-xl border border-neutral-600 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-[#FD973E] focus:border-transparent transition-all" placeholder="G..." disabled={isBusy} required />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="amount" className="text-neutral-300 font-medium">Miktar (XLM)</label>
-                            <input id="amount" type="number" step="any" value={amount} onChange={(e) => setAmount(e.target.value)} className="px-4 py-3 bg-neutral-700 rounded-xl border border-neutral-600 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-[#FD973E] focus:border-transparent transition-all" placeholder="10" disabled={isBusy} required />
-                        </div>
-                        <button type="submit" className="w-full px-6 py-4 mt-2 bg-neutral-700 hover:bg-neutral-600 rounded-xl transition-all text-lg font-semibold disabled:bg-neutral-800 disabled:cursor-not-allowed text-neutral-100 shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600" disabled={isBusy || !destination || !amount}>
-                            {isBusy ? 'Gönderiliyor...' : 'İmzala ve Gönder'}
-                        </button>
-                    </form>
-                )}
-
-                {/* AI Assistant Info */}
-                <div className="w-full p-8 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700">
-                    <div className="text-center">
-                        <h3 className="text-2xl font-semibold mb-4 text-neutral-100 flex items-center justify-center gap-2">
-                            <Bot className="h-6 w-6" />
-                            AI Asistan
-                        </h3>
-                        <p className="text-neutral-300 mb-6 text-base">
-                            Stellar AI Asistan ile bakiye sorgulayın ve transfer işlemlerinizi kolaylaştırın!
-                        </p>
-                        {activeWallet ? (
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <button 
-                                    onClick={() => setIsChatOpen(true)}
-                                    className="px-8 py-4 bg-neutral-700 hover:bg-neutral-600 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 text-neutral-100 shadow-lg hover:shadow-xl border border-neutral-600 flex items-center justify-center gap-2"
-                                >
-                                    <Send className="h-5 w-5" />
-                                    Hemen Konuş
-                                </button>
-                                <Link 
-                                    href="/ai-chat" 
-                                    className="inline-block px-8 py-4 bg-neutral-700 hover:bg-neutral-600 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 text-neutral-100 shadow-lg hover:shadow-xl border border-neutral-600 flex items-center justify-center gap-2"
-                                >
-                                    <ArrowRight className="h-5 w-5" />
-                                    Tam Sayfa
-                                </Link>
-                            </div>
-                        ) : (
-                            <div className="text-center">
-                                <div className="bg-neutral-700 border border-neutral-600 rounded-xl p-6 mb-4">
-                                    <p className="text-neutral-200 text-base mb-2 flex items-center justify-center gap-2">
-                                        <Lock className="h-5 w-5" />
-                                        AI Asistan'ı kullanmak için giriş yapmanız gerekiyor
-                                    </p>
-                                    <p className="text-neutral-400 text-sm">
-                                        Güvenliğiniz için AI Asistan sadece kimlik doğrulaması yapılmış kullanıcılara açıktır.
-                                    </p>
-                                </div>
-                                <div className="text-neutral-400 text-sm flex items-center justify-center gap-1">
-                                    <ArrowRight className="h-4 w-4 rotate-90" />
-                                    Yukarıdan giriş yapın veya yeni wallet oluşturun
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
             </div>
             
-            {/* Floating Chat Button - only show when modal is closed and user is logged in */}
-            {!isChatOpen && activeWallet && <ChatFloatingButton onClick={() => setIsChatOpen(true)} />}
-            
-            {/* Chat Modal - only available for logged in users */}
-            {activeWallet && (
-                <ChatModal 
-                    isOpen={isChatOpen} 
-                    onClose={() => setIsChatOpen(false)}
-                    activeWallet={activeWallet}
-                />
-            )}
+            {/* Bottom Navbar - only show when user is logged in */}
+            {activeWallet && <BottomNavbar activeWallet={activeWallet} />}
         </main>
     );
 }
