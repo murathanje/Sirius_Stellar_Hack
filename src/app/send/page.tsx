@@ -112,8 +112,8 @@ export default function SendPage() {
             <div className="min-h-screen bg-neutral-900 text-neutral-100 flex items-center justify-center p-8">
                 <div className="text-center">
                     <AlertTriangle className="h-16 w-16 mx-auto text-neutral-600 mb-4" />
-                    <h2 className="text-2xl font-bold text-neutral-100 mb-2">Giriş Gerekli</h2>
-                    <p className="text-neutral-300">Transfer yapabilmek için önce giriş yapmanız gerekiyor.</p>
+                    <h2 className="text-2xl font-bold text-neutral-100 mb-2">Login Required</h2>
+                    <p className="text-neutral-300">You need to log in first to make transfers.</p>
                 </div>
             </div>
         );
@@ -125,7 +125,7 @@ export default function SendPage() {
             {transferError && (
                 <div className="fixed top-5 right-5 w-80 bg-neutral-800 border border-neutral-700 text-neutral-200 p-4 rounded-xl shadow-2xl z-50 backdrop-blur-sm">
                     <div className="flex justify-between items-center mb-2">
-                        <h4 className="font-semibold text-neutral-100">İşlem Başarısız</h4>
+                        <h4 className="font-semibold text-neutral-100">Transaction Failed</h4>
                         <button onClick={() => setTransferError(null)} className="text-2xl font-bold leading-none hover:text-neutral-400 transition-colors">&times;</button>
                     </div>
                     <p className="text-sm text-neutral-300">{transferError}</p>
@@ -135,11 +135,11 @@ export default function SendPage() {
             <div className="max-w-2xl mx-auto">
                 <div className="flex items-center gap-3 mb-8">
                     <Send className="h-8 w-8 text-[#FD973E]" />
-                    <h1 className="text-3xl font-bold text-neutral-100">Ödeme Gönder</h1>
+                    <h1 className="text-3xl font-bold text-neutral-100">Send Payment</h1>
                 </div>
 
                 <div className="bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 p-6 mb-6">
-                    <h3 className="text-lg font-semibold text-neutral-100 mb-2">Gönderen:</h3>
+                    <h3 className="text-lg font-semibold text-neutral-100 mb-2">Sender:</h3>
                     <p className="text-neutral-300 font-mono text-sm break-all bg-neutral-700 p-3 rounded-lg border border-neutral-600">
                         {activeWallet.address}
                     </p>
@@ -147,11 +147,11 @@ export default function SendPage() {
                 </div>
 
                 <form onSubmit={handleTransfer} className="bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 p-8">
-                    <h3 className="text-2xl font-semibold text-center text-neutral-100 mb-6">Transfer Detayları</h3>
+                    <h3 className="text-2xl font-semibold text-center text-neutral-100 mb-6">Transfer Details</h3>
                     
                     <div className="flex flex-col gap-6">
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="destination" className="text-neutral-300 font-medium">Hedef Adres</label>
+                            <label htmlFor="destination" className="text-neutral-300 font-medium">Recipient Address</label>
                             <input 
                                 id="destination" 
                                 type="text" 
@@ -165,7 +165,7 @@ export default function SendPage() {
                         </div>
                         
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="amount" className="text-neutral-300 font-medium">Miktar (XLM)</label>
+                            <label htmlFor="amount" className="text-neutral-300 font-medium">Amount (XLM)</label>
                             <input 
                                 id="amount" 
                                 type="number" 
@@ -187,12 +187,12 @@ export default function SendPage() {
                             {isBusy ? (
                                 <>
                                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-neutral-100"></div>
-                                    Gönderiliyor...
+                                    Sending...
                                 </>
                             ) : (
                                 <>
                                     <Send className="h-5 w-5" />
-                                    İmzala ve Gönder
+                                    Sign and Send
                                 </>
                             )}
                         </button>
@@ -200,7 +200,7 @@ export default function SendPage() {
                 </form>
 
                 <div className="mt-6 p-4 bg-neutral-800/50 backdrop-blur-sm rounded-xl border border-neutral-700">
-                    <h4 className="font-semibold text-neutral-100 mb-2">Durum:</h4>
+                    <h4 className="font-semibold text-neutral-100 mb-2">Status:</h4>
                     <p className="text-neutral-300 break-words">{status}</p>
                 </div>
             </div>

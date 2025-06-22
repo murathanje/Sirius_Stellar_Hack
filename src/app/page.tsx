@@ -152,11 +152,11 @@ export default function Home() {
             
             if (error instanceof Error) {
                 if (error.message.includes('NotAllowedError') || error.message.includes('passkey')) {
-                    errorMessage = "Passkey doğrulaması başarısız. Lütfen doğru passkey ile tekrar deneyin veya tarayıcı ayarlarınızı kontrol edin.";
+                    errorMessage = "Passkey verification failed. Please try again with the correct passkey or check your browser settings.";
                 } else if (error.message.includes('AbortError')) {
-                    errorMessage = "İşlem iptal edildi. Passkey doğrulamasını tamamlamak için tekrar deneyin.";
+                    errorMessage = "The operation was aborted. Please try again to complete passkey verification.";
                 } else if (error.message.includes('InvalidStateError')) {
-                    errorMessage = "Bu cihazda bu wallet için kayıtlı passkey bulunamadı.";
+                    errorMessage = "No passkey registered for this wallet on this device.";
                 } else {
                     errorMessage = error.message;
                 }
@@ -175,12 +175,12 @@ export default function Home() {
             {loginAttemptError && (
                 <div className="fixed top-5 left-5 w-80 bg-neutral-800 border border-neutral-700 text-neutral-200 p-4 rounded-xl shadow-2xl z-50 backdrop-blur-sm">
                     <div className="flex justify-between items-center mb-2">
-                        <h4 className="font-semibold text-neutral-100">Giriş Başarısız</h4>
+                        <h4 className="font-semibold text-neutral-100">Login Failed</h4>
                         <button onClick={() => setLoginAttemptError(null)} className="text-2xl font-bold leading-none hover:text-neutral-400 transition-colors">&times;</button>
                     </div>
                     <p className="text-sm text-neutral-300">{loginAttemptError}</p>
                     <div className="mt-2 text-xs text-neutral-400">
-                        💡 İpucu: Passkey doğrulaması için parmak izi, yüz tanıma veya PIN kullanabilirsiniz.
+                        💡 Hint: You can use fingerprint, facial recognition, or PIN for passkey verification.
                     </div>
                 </div>
             )}
@@ -199,25 +199,25 @@ export default function Home() {
                 {/* Login/Create Section */}
                 {!activeWallet ? (
                     <div className="w-full p-8 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 flex flex-col gap-6">
-                        <h2 className="text-2xl text-center font-semibold text-neutral-100">Başlayın</h2>
+                        <h2 className="text-2xl text-center font-semibold text-neutral-100">Get Started</h2>
                         {wallets.length > 0 && (
                             <form onSubmit={handleLogin} className="flex flex-col md:flex-row gap-4 items-center">
                                 <select name="walletSelector" className="w-full px-4 py-3 bg-neutral-700 rounded-xl border border-neutral-600 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-[#FD973E] focus:border-transparent transition-all">
                                     {wallets.map(w => <option key={w.name} value={w.name}>{w.name} ({w.address.slice(0,6)}...{w.address.slice(-6)})</option>)}
                                 </select>
                                 <button type="submit" disabled={isBusy} className="w-full md:w-auto px-6 py-3 bg-neutral-700 hover:bg-neutral-600 rounded-xl transition-all font-semibold disabled:bg-neutral-800 disabled:cursor-not-allowed text-neutral-100 shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600">
-                                    Giriş Yap
+                                    Login
                                 </button>
                             </form>
                         )}
                         <button onClick={handleCreateWallet} disabled={isBusy} className="w-full px-6 py-3 bg-neutral-700 hover:bg-neutral-600 rounded-xl transition-all font-semibold disabled:bg-neutral-800 disabled:cursor-not-allowed text-neutral-100 shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600">
-                            Yeni Wallet Oluştur
+                            Create New Wallet
                         </button>
                     </div>
                 ) : (
                     <div className="w-full p-8 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 flex flex-col gap-6">
                         <div className="text-center">
-                            <h2 className="text-2xl font-semibold text-neutral-100 mb-4">Hoş Geldiniz!</h2>
+                            <h2 className="text-2xl font-semibold text-neutral-100 mb-4">Welcome!</h2>
                             <p className="text-neutral-300 mb-6">{activeWallet.name}</p>
                         </div>
                     </div>
@@ -225,11 +225,11 @@ export default function Home() {
 
                 {/* Status and Balance Section */}
                 <div className="w-full p-6 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 min-h-[120px]">
-                    <h3 className="text-xl font-semibold text-neutral-100 mb-3">Durum:</h3>
+                    <h3 className="text-xl font-semibold text-neutral-100 mb-3">Status:</h3>
                     <p className="text-neutral-300 break-words">{status}</p>
                     {activeWallet && balance && (
                         <div className="mt-4">
-                            <h4 className="font-bold text-neutral-100">Bakiye:</h4>
+                            <h4 className="font-bold text-neutral-100">Balance:</h4>
                             <p className="font-mono text-2xl font-bold text-[#FD973E]">{balance}</p>
                         </div>
                     )}

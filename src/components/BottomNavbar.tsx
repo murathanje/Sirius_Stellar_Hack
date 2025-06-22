@@ -17,25 +17,25 @@ export default function BottomNavbar({ activeWallet }: BottomNavbarProps) {
 
   const navItems = [
     {
-      name: 'Ana Sayfa',
+      name: 'Home',
       href: '/',
       icon: Wallet,
       active: pathname === '/'
     },
     {
-      name: 'Gönder',
+      name: 'Send',
       href: '/send',
       icon: Send,
       active: pathname === '/send'
     },
     {
-      name: 'AI Asistan',
+      name: 'AI Assistant',
       href: '/ai',
       icon: Bot,
       active: pathname === '/ai'
     },
     {
-      name: 'Hesap',
+      name: 'Account',
       href: '/account',
       icon: User,
       active: pathname === '/account'

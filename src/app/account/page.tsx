@@ -66,7 +66,7 @@ export default function AccountPage() {
             <div className="min-h-screen bg-neutral-900 text-neutral-100 flex items-center justify-center">
                 <div className="text-center">
                     <User className="h-16 w-16 mx-auto text-neutral-600 animate-pulse" />
-                    <p className="mt-4 text-neutral-400">Yükleniyor...</p>
+                    <p className="mt-4 text-neutral-400">Loading...</p>
                 </div>
             </div>
         );
@@ -77,8 +77,8 @@ export default function AccountPage() {
             <div className="min-h-screen bg-neutral-900 text-neutral-100 flex items-center justify-center p-8">
                 <div className="text-center">
                     <AlertTriangle className="h-16 w-16 mx-auto text-neutral-600 mb-4" />
-                    <h2 className="text-2xl font-bold text-neutral-100 mb-2">Giriş Gerekli</h2>
-                    <p className="text-neutral-300">Hesap bilgilerini görmek için önce giriş yapmanız gerekiyor.</p>
+                    <h2 className="text-2xl font-bold text-neutral-100 mb-2">Login Required</h2>
+                    <p className="text-neutral-300">You need to log in first to view account information.</p>
                 </div>
             </div>
         );
@@ -89,7 +89,7 @@ export default function AccountPage() {
             <div className="max-w-2xl mx-auto">
                 <div className="flex items-center gap-3 mb-8">
                     <User className="h-8 w-8 text-[#FD973E]" />
-                    <h1 className="text-3xl font-bold text-neutral-100">Hesap Bilgileri</h1>
+                    <h1 className="text-3xl font-bold text-neutral-100">Account Information</h1>
                 </div>
 
                 {/* Wallet Info Card */}
@@ -101,7 +101,7 @@ export default function AccountPage() {
 
                     <div className="space-y-4">
                         <div>
-                            <label className="text-neutral-300 font-medium mb-2 block">Wallet Adresi:</label>
+                            <label className="text-neutral-300 font-medium mb-2 block">Wallet Address:</label>
                             <div className="flex items-center gap-2">
                                 <p className="font-mono text-sm text-neutral-300 break-all bg-neutral-700 p-3 rounded-lg border border-neutral-600 flex-1">
                                     {activeWallet.address}
@@ -109,7 +109,7 @@ export default function AccountPage() {
                                 <button
                                     onClick={handleCopyAddress}
                                     className="p-2 bg-neutral-700 hover:bg-neutral-600 rounded-lg transition-colors"
-                                    title="Adresi kopyala"
+                                    title="Copy address"
                                 >
                                     {copied ? (
                                         <Check className="h-4 w-4 text-green-400" />
@@ -122,7 +122,7 @@ export default function AccountPage() {
 
                         {balance && (
                             <div>
-                                <label className="text-neutral-300 font-medium mb-2 block">Bakiye:</label>
+                                <label className="text-neutral-300 font-medium mb-2 block">Balance:</label>
                                 <p className="font-mono text-xl font-bold text-[#FD973E] bg-neutral-700 p-3 rounded-lg border border-neutral-600">
                                     {balance}
                                 </p>
@@ -135,12 +135,12 @@ export default function AccountPage() {
                 <div className="bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 p-6 mb-6">
                     <div className="flex items-center gap-3 mb-4">
                         <Shield className="h-5 w-5 text-[#FD973E]" />
-                        <h3 className="text-lg font-semibold text-neutral-100">Güvenlik</h3>
+                        <h3 className="text-lg font-semibold text-neutral-100">Security</h3>
                     </div>
                     <div className="space-y-2 text-sm text-neutral-300">
-                        <p>• Passkey teknolojisi ile güvenli giriş</p>
-                        <p>• Biyometrik doğrulama (parmak izi, yüz tanıma)</p>
-                        <p>• Cihaz bazlı kimlik doğrulama</p>
+                        <p>• Secure login with passkey technology</p>
+                        <p>• Biometric verification (fingerprint, facial recognition)</p>
+                        <p>• Device-based authentication</p>
                     </div>
                 </div>
 
@@ -151,10 +151,10 @@ export default function AccountPage() {
                         className="w-full px-6 py-4 bg-red-300 hover:bg-red-400 rounded-xl transition-all font-semibold text-neutral-100 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
                     >
                         <LogOut className="h-5 w-5" />
-                        Çıkış Yap
+                        Logout
                     </button>
                     <p className="text-xs text-neutral-400 text-center mt-3">
-                        Çıkış yaptığınızda tüm oturum bilgileri silinecektir.
+                        All session information will be deleted when you log out.
                     </p>
                 </div>
             </div>

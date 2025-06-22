@@ -56,8 +56,8 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
         <div className="flex items-center space-x-4">
           <Bot className="h-8 w-8" />
           <div>
-            <h1 className="text-2xl font-bold">Stellar AI Asistan</h1>
-            <p className="text-neutral-300 text-base">Bakiye sorgu ve token transfer yardımcınız</p>
+            <h1 className="text-2xl font-bold">Stellar AI Assistant</h1>
+            <p className="text-neutral-300 text-base">Your balance query and token transfer helper</p>
           </div>
         </div>
       </div>
@@ -67,29 +67,29 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
         {messages.length === 0 && (
           <div className="text-center text-neutral-400 mt-20">
             <Bot className="h-16 w-16 mx-auto mb-6 text-neutral-600" />
-            <p className="text-xl font-medium mb-3 text-neutral-200">Stellar AI Asistan'a Hoş Geldiniz!</p>
-            <p className="text-base mb-6 text-neutral-400">Size nasıl yardımcı olabilirim?</p>
+            <p className="text-xl font-medium mb-3 text-neutral-200">Welcome to Stellar AI Assistant!</p>
+            <p className="text-base mb-6 text-neutral-400">How can I help you?</p>
             <div className="space-y-3 text-sm text-left max-w-md mx-auto">
               <div className="bg-neutral-800 p-4 rounded-xl shadow-sm border border-neutral-700">
                 <p className="font-medium text-neutral-200 flex items-center gap-2">
                   <Coins className="h-4 w-4" />
-                  Bakiye Sorgulama:
+                  Balance Query:
                 </p>
-                <p className="text-neutral-400">"GXXXXXXX adresinin bakiyesini kontrol et"</p>
+                <p className="text-neutral-400">"Check the balance of address GXXXXXXX"</p>
               </div>
               <div className="bg-neutral-800 p-4 rounded-xl shadow-sm border border-neutral-700">
                 <p className="font-medium text-neutral-200 flex items-center gap-2">
                   <Send className="h-4 w-4" />
-                  Transfer Bilgisi:
+                  Transfer Information:
                 </p>
-                <p className="text-neutral-400">"10 XLM'yi GXXXXXXX adresine nasıl gönderirim?"</p>
+                <p className="text-neutral-400">"How do I send 10 XLM to address GXXXXXXX?"</p>
               </div>
               <div className="bg-neutral-800 p-4 rounded-xl shadow-sm border border-neutral-700">
                 <p className="font-medium text-neutral-200 flex items-center gap-2">
                   <Info className="h-4 w-4" />
-                  Stellar Hakkında:
+                  About Stellar:
                 </p>
-                <p className="text-neutral-400">"Stellar nedir?" veya "XLM token nedir?"</p>
+                <p className="text-neutral-400">"What is Stellar?" or "What is XLM token?"</p>
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
                       <div key={index} className="bg-neutral-700 rounded-lg p-3 text-sm border border-neutral-600">
                         <div className="font-medium text-neutral-200 mb-2 flex items-center gap-2">
                           <Settings className="h-4 w-4" />
-                          {tool.toolName === 'checkBalance' ? 'Bakiye Kontrolü' : 'Transfer İşlemi'}
+                          {tool.toolName === 'checkBalance' ? 'Balance Check' : 'Transfer Operation'}
                         </div>
                                                  {tool.state === 'result' && tool.result && (
                            <div className="text-neutral-300">
@@ -144,12 +144,12 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
                                  transferDetails={(tool.result as any).transferDetails}
                                  onComplete={(result) => {
                                    if (result.success) {
-                                     console.log('Transfer başarılı:', result.transactionHash);
+                                     console.log('Transfer successful:', result.transactionHash);
                                    } else {
-                                     console.log('Transfer başarısız:', result.error);
+                                     console.log('Transfer failed:', result.error);
                                    }
                                  }}
-                                 onCancel={() => console.log('Transfer iptal edildi')}
+                                 onCancel={() => console.log('Transfer cancelled')}
                                />
                              ) : (
                                <pre className="whitespace-pre-wrap">
@@ -176,7 +176,7 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
               <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-4 shadow-sm">
                 <div className="flex items-center space-x-3">
                   <Loader2 className="h-5 w-5 animate-spin text-[#FD973E]" />
-                  <span className="text-neutral-300">Düşünüyorum...</span>
+                  <span className="text-neutral-300">AI is thinking...</span>
                 </div>
               </div>
             </div>
@@ -193,7 +193,7 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
             type="text"
             value={input}
             onChange={handleInputChange}
-            placeholder="Mesajınızı yazın... (örn: 'GXXXXXXX adresinin bakiyesini kontrol et')"
+            placeholder="Type your message... (e.g., 'Check the balance of address GXXXXXXX')"
             className="flex-1 border border-neutral-600 rounded-xl px-5 py-3 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-[#FD973E] focus:border-transparent transition-all bg-neutral-700"
             disabled={isLoading}
           />
@@ -207,13 +207,13 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
             ) : (
               <Send className="h-5 w-5" />
             )}
-            <span>Gönder</span>
+            <span>Send</span>
           </button>
         </form>
         
         <div className="mt-3 text-sm text-neutral-400 text-center flex items-center justify-center gap-2">
           <HelpCircle className="h-4 w-4" />
-          Stellar adresleri G harfi ile başlar ve 56 karakter uzunluğundadır
+          Stellar addresses start with G and are 56 characters long
         </div>
       </div>
     </div>

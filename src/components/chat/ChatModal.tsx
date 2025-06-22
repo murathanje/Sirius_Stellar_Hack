@@ -49,8 +49,8 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
           <div className="flex items-center space-x-3">
             <Bot className="h-5 w-5" />
             <div>
-              <h3 className="font-semibold text-sm">Stellar AI Asistan</h3>
-              {!isMinimized && <p className="text-xs text-neutral-300">Bakiye & Transfer Yardımcısı</p>}
+              <h3 className="font-semibold text-sm">Stellar AI Assistant</h3>
+              {!isMinimized && <p className="text-xs text-neutral-300">Balance & Transfer Helper</p>}
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -76,22 +76,22 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
               {messages.length === 0 && (
                 <div className="text-center text-neutral-400 mt-10">
                   <Bot className="h-12 w-12 mx-auto mb-4 text-neutral-600" />
-                  <p className="text-sm font-medium mb-2 text-neutral-200">AI Asistan'a Hoş Geldiniz!</p>
-                  <p className="text-xs mb-4 text-neutral-400">Size nasıl yardımcı olabilirim?</p>
+                  <p className="text-sm font-medium mb-2 text-neutral-200">Welcome to AI Assistant!</p>
+                  <p className="text-xs mb-4 text-neutral-400">How can I help you?</p>
                   <div className="space-y-3 text-xs">
                     <div className="bg-neutral-800 p-3 rounded-xl shadow-sm border border-neutral-700">
                       <p className="font-medium text-neutral-200 flex items-center gap-2">
                         <Coins className="h-4 w-4" />
-                        Bakiye:
+                        Balance:
                       </p>
-                      <p className="text-neutral-400">"GXXX... adresinin bakiyesi nedir?"</p>
+                      <p className="text-neutral-400">"What is the balance of address GXXX...?"</p>
                     </div>
                     <div className="bg-neutral-800 p-3 rounded-xl shadow-sm border border-neutral-700">
                       <p className="font-medium text-neutral-200 flex items-center gap-2">
                         <Send className="h-4 w-4" />
                         Transfer:
                       </p>
-                      <p className="text-neutral-400">"10 XLM nasıl gönderirim?"</p>
+                      <p className="text-neutral-400">"How do I send 10 XLM?"</p>
                     </div>
                   </div>
                 </div>
@@ -137,7 +137,7 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
                                <div key={index} className="bg-neutral-700 rounded-lg p-3 text-xs overflow-hidden border border-neutral-600">
                                  <div className="font-medium text-neutral-200 mb-2 flex items-center gap-2">
                                    <Settings className="h-4 w-4" />
-                                   {tool.toolName === 'checkBalance' ? 'Bakiye Kontrolü' : 'Transfer İşlemi'}
+                                   {tool.toolName === 'checkBalance' ? 'Balance Check' : 'Transfer Operation'}
                                  </div>
                                                        {tool.state === 'result' && tool.result && (
                            <div className="text-neutral-300">
@@ -145,12 +145,12 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
                                <TransferHandler
                                  transferDetails={(tool.result as any).transferDetails}
                                  onComplete={(result) => {
-                                   // Transfer tamamlandığında sonucu AI'ya gönder
+                                   // Send result to AI when transfer is completed
                                    if (result.success) {
-                                     const successMessage = `✅ Transfer başarıyla tamamlandı!\n\nTx Hash: ${result.transactionHash}`;
-                                     // Yeni mesaj olarak eklenebilir
+                                     const successMessage = `✅ Transfer completed successfully!\n\nTx Hash: ${result.transactionHash}`;
+                                     // Can be added as new message
                                    } else {
-                                     const errorMessage = `❌ Transfer başarısız: ${result.error}`;
+                                     const errorMessage = `❌ Transfer failed: ${result.error}`;
                                    }
                                    setPendingTransfer(null);
                                  }}
@@ -183,7 +183,7 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
                     <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-3 shadow-sm">
                       <div className="flex items-center space-x-2">
                         <Loader2 className="h-4 w-4 animate-spin text-[#FD973E]" />
-                        <span className="text-neutral-300 text-sm">Düşünüyorum...</span>
+                        <span className="text-neutral-300 text-sm">AI is thinking...</span>
                       </div>
                     </div>
                   </div>
@@ -200,7 +200,7 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
                   type="text"
                   value={input}
                   onChange={handleInputChange}
-                  placeholder="Mesajınızı yazın..."
+                  placeholder="Type your message..."
                   className="flex-1 border border-neutral-600 rounded-xl px-4 py-3 text-sm text-neutral-100 focus:outline-none focus:ring-2 focus:ring-[#FD973E] focus:border-transparent transition-all bg-neutral-700"
                   disabled={isLoading}
                 />
@@ -219,7 +219,7 @@ export default function ChatModal({ isOpen, onClose, activeWallet }: ChatModalPr
               
               <div className="mt-2 text-xs text-neutral-400 text-center flex items-center justify-center gap-1">
                 <HelpCircle className="h-3 w-3" />
-                Stellar adresleri G ile başlar (56 karakter)
+                Stellar addresses start with G (56 characters)
               </div>
             </div>
           </>
