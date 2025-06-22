@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import PasskeyWallet from '@yuesth/passkey-wallet-stellar';
 import { Horizon, TransactionBuilder, Operation, Networks, Asset } from '@stellar/stellar-sdk';
 import Link from 'next/link';
+import Image from 'next/image';
 import ChatModal, { ChatFloatingButton } from '@/components/chat/ChatModal';
+import { Bot, Wallet, Send, Shield, ArrowRight, Lock, AlertTriangle } from 'lucide-react';
 
 // The secret key of the account we created to fund new wallets.
 // This is read from an environment variable.
@@ -243,131 +245,147 @@ export default function Home() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-900 text-white">
+        <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-neutral-900 text-neutral-100">
             {/* Transfer Error Popup */}
             {transferError && (
-                <div className="fixed top-5 right-5 w-80 bg-red-800 border border-red-600 text-white p-4 rounded-lg shadow-lg z-50">
+                <div className="fixed top-5 right-5 w-80 bg-neutral-800 border border-neutral-700 text-neutral-200 p-4 rounded-xl shadow-2xl z-50 backdrop-blur-sm">
                     <div className="flex justify-between items-center mb-2">
-                        <h4 className="font-bold">Transaction Failed</h4>
-                        <button onClick={() => setTransferError(null)} className="text-2xl font-bold leading-none hover:text-gray-300">&times;</button>
+                        <h4 className="font-semibold text-neutral-100">İşlem Başarısız</h4>
+                        <button onClick={() => setTransferError(null)} className="text-2xl font-bold leading-none hover:text-neutral-400 transition-colors">&times;</button>
                     </div>
-                    <p className="text-sm">{transferError}</p>
+                    <p className="text-sm text-neutral-300">{transferError}</p>
                 </div>
             )}
             
             {/* Login Error Popup */}
             {loginAttemptError && (
-                <div className="fixed top-5 left-5 w-80 bg-orange-800 border border-orange-600 text-white p-4 rounded-lg shadow-lg z-50">
+                <div className="fixed top-5 left-5 w-80 bg-neutral-800 border border-neutral-700 text-neutral-200 p-4 rounded-xl shadow-2xl z-50 backdrop-blur-sm">
                     <div className="flex justify-between items-center mb-2">
-                        <h4 className="font-bold">Login Failed</h4>
-                        <button onClick={() => setLoginAttemptError(null)} className="text-2xl font-bold leading-none hover:text-gray-300">&times;</button>
+                        <h4 className="font-semibold text-neutral-100">Giriş Başarısız</h4>
+                        <button onClick={() => setLoginAttemptError(null)} className="text-2xl font-bold leading-none hover:text-neutral-400 transition-colors">&times;</button>
                     </div>
-                    <p className="text-sm">{loginAttemptError}</p>
-                    <div className="mt-2 text-xs text-orange-200">
+                    <p className="text-sm text-neutral-300">{loginAttemptError}</p>
+                    <div className="mt-2 text-xs text-neutral-400">
                         💡 İpucu: Passkey doğrulaması için parmak izi, yüz tanıma veya PIN kullanabilirsiniz.
                     </div>
                 </div>
             )}
-            <div className="z-10 w-full max-w-2xl items-center justify-between font-mono text-sm flex flex-col gap-6">
-                <h1 className="text-4xl font-bold">Stellar Multi-Passkey Wallet</h1>
+            <div className="z-10 w-full max-w-2xl items-center justify-between flex flex-col gap-8">
+                <div className="flex flex-col items-center gap-4">
+                    <Image 
+                        src="/sirius-logo.png" 
+                        alt="Sirius Logo" 
+                        width={120} 
+                        height={120} 
+                        className="rounded-xl"
+                    />
+                    <h1 className="text-3xl font-bold text-neutral-100 text-center">Multi-Passkey Wallet</h1>
+                </div>
 
                 {/* Login/Create Section */}
                 {!activeWallet ? (
-                    <div className="w-full p-6 bg-gray-800 rounded-lg flex flex-col gap-4">
-                        <h2 className="text-xl text-center font-semibold">Get Started</h2>
+                    <div className="w-full p-8 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 flex flex-col gap-6">
+                        <h2 className="text-2xl text-center font-semibold text-neutral-100">Başlayın</h2>
                         {wallets.length > 0 && (
                             <form onSubmit={handleLogin} className="flex flex-col md:flex-row gap-4 items-center">
-                                <select name="walletSelector" className="w-full px-3 py-2 bg-gray-700 rounded-md border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <select name="walletSelector" className="w-full px-4 py-3 bg-neutral-700 rounded-xl border border-neutral-600 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-[#FD973E] focus:border-transparent transition-all">
                                     {wallets.map(w => <option key={w.name} value={w.name}>{w.name} ({w.address.slice(0,6)}...{w.address.slice(-6)})</option>)}
                                 </select>
-                                <button type="submit" disabled={isBusy} className="w-full md:w-auto px-4 py-2 bg-green-600 rounded-lg hover:bg-green-700 transition-colors font-semibold disabled:bg-gray-600 shrink-0">
-                                    Login
+                                <button type="submit" disabled={isBusy} className="w-full md:w-auto px-6 py-3 bg-neutral-700 hover:bg-neutral-600 rounded-xl transition-all font-semibold disabled:bg-neutral-800 disabled:cursor-not-allowed text-neutral-100 shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600">
+                                    Giriş Yap
                                 </button>
                             </form>
                         )}
-                        <button onClick={handleCreateWallet} disabled={isBusy} className="w-full px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:bg-gray-600">
-                            Create a New Wallet
+                        <button onClick={handleCreateWallet} disabled={isBusy} className="w-full px-6 py-3 bg-neutral-700 hover:bg-neutral-600 rounded-xl transition-all font-semibold disabled:bg-neutral-800 disabled:cursor-not-allowed text-neutral-100 shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600">
+                            Yeni Wallet Oluştur
                         </button>
                     </div>
                 ) : (
-                    <div className="w-full p-6 bg-gray-800 rounded-lg flex flex-col gap-4">
+                    <div className="w-full p-8 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 flex flex-col gap-6">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold">Logged in as: <span className="font-bold text-green-400">{activeWallet.name}</span></h2>
-                            <button onClick={handleLogout} disabled={isBusy} className="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700 transition-colors font-semibold disabled:bg-gray-600">
-                                Logout
+                            <h2 className="text-2xl font-semibold text-neutral-100">Giriş yapıldı: <span className="font-bold text-[#FD973E]">{activeWallet.name}</span></h2>
+                            <button onClick={handleLogout} disabled={isBusy} className="px-6 py-3 bg-neutral-700 hover:bg-neutral-600 rounded-xl transition-all font-semibold disabled:bg-neutral-800 disabled:cursor-not-allowed text-neutral-100 shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600">
+                                Çıkış Yap
                             </button>
                         </div>
                         <div>
-                            <h3 className="font-semibold text-gray-300">Address:</h3>
-                            <p className="font-mono text-sm text-green-300 break-all">{activeWallet.address}</p>
+                            <h3 className="font-semibold text-neutral-300 mb-2">Adres:</h3>
+                            <p className="font-mono text-sm text-[#D856FB] break-all bg-neutral-700 p-3 rounded-lg border border-neutral-600">{activeWallet.address}</p>
                         </div>
                     </div>
                 )}
 
                 {/* Status and Balance Section */}
-                <div className="w-full p-4 bg-gray-800 rounded-lg min-h-[100px]">
-                    <h3 className="text-lg font-semibold">Status:</h3>
-                    <p className="mt-2 text-gray-300 break-words">{status}</p>
+                <div className="w-full p-6 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700 min-h-[120px]">
+                    <h3 className="text-xl font-semibold text-neutral-100 mb-3">Durum:</h3>
+                    <p className="text-neutral-300 break-words">{status}</p>
                     {activeWallet && balance && (
                         <div className="mt-4">
-                            <h4 className="font-bold">Balance:</h4>
-                            <p className="font-mono text-yellow-400 text-xl">{balance}</p>
+                            <h4 className="font-bold text-neutral-100">Bakiye:</h4>
+                            <p className="font-mono text-2xl font-bold text-[#FD973E]">{balance}</p>
                         </div>
                     )}
                 </div>
 
                 {/* Transfer Form */}
                 {activeWallet && (
-                    <form onSubmit={handleTransfer} className="w-full flex flex-col gap-4 p-6 bg-gray-800 rounded-lg">
-                        <h3 className="text-lg font-semibold text-center text-white">Send Payment</h3>
-                        <div className="flex flex-col">
-                            <label htmlFor="destination" className="mb-2 text-gray-300">Destination Address</label>
-                            <input id="destination" type="text" value={destination} onChange={(e) => setDestination(e.target.value)} className="px-3 py-2 bg-gray-700 rounded-md border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="G..." disabled={isBusy} required />
+                    <form onSubmit={handleTransfer} className="w-full flex flex-col gap-6 p-8 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700">
+                        <h3 className="text-2xl font-semibold text-center text-neutral-100">Ödeme Gönder</h3>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="destination" className="text-neutral-300 font-medium">Hedef Adres</label>
+                            <input id="destination" type="text" value={destination} onChange={(e) => setDestination(e.target.value)} className="px-4 py-3 bg-neutral-700 rounded-xl border border-neutral-600 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-[#FD973E] focus:border-transparent transition-all" placeholder="G..." disabled={isBusy} required />
                         </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="amount" className="mb-2 text-gray-300">Amount (XLM)</label>
-                            <input id="amount" type="number" step="any" value={amount} onChange={(e) => setAmount(e.target.value)} className="px-3 py-2 bg-gray-700 rounded-md border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="10" disabled={isBusy} required />
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="amount" className="text-neutral-300 font-medium">Miktar (XLM)</label>
+                            <input id="amount" type="number" step="any" value={amount} onChange={(e) => setAmount(e.target.value)} className="px-4 py-3 bg-neutral-700 rounded-xl border border-neutral-600 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-[#FD973E] focus:border-transparent transition-all" placeholder="10" disabled={isBusy} required />
                         </div>
-                        <button type="submit" className="w-full px-4 py-3 mt-2 bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors text-lg font-semibold disabled:bg-gray-600" disabled={isBusy || !destination || !amount}>
-                            {isBusy ? 'Sending...' : 'Sign and Send'}
+                        <button type="submit" className="w-full px-6 py-4 mt-2 bg-neutral-700 hover:bg-neutral-600 rounded-xl transition-all text-lg font-semibold disabled:bg-neutral-800 disabled:cursor-not-allowed text-neutral-100 shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600" disabled={isBusy || !destination || !amount}>
+                            {isBusy ? 'Gönderiliyor...' : 'İmzala ve Gönder'}
                         </button>
                     </form>
                 )}
 
                 {/* AI Assistant Info */}
-                <div className="w-full p-6 bg-gradient-to-r from-purple-800 to-blue-800 rounded-lg">
+                <div className="w-full p-8 bg-neutral-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-neutral-700">
                     <div className="text-center">
-                        <h3 className="text-lg font-semibold mb-2">🤖 AI Assistant</h3>
-                        <p className="text-gray-300 mb-4 text-sm">
-                            Stellar AI Assistant ile bakiye sorgulayın ve transfer işlemlerinizi kolaylaştırın!
+                        <h3 className="text-2xl font-semibold mb-4 text-neutral-100 flex items-center justify-center gap-2">
+                            <Bot className="h-6 w-6" />
+                            AI Asistan
+                        </h3>
+                        <p className="text-neutral-300 mb-6 text-base">
+                            Stellar AI Asistan ile bakiye sorgulayın ve transfer işlemlerinizi kolaylaştırın!
                         </p>
                         {activeWallet ? (
-                            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <button 
                                     onClick={() => setIsChatOpen(true)}
-                                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105"
+                                    className="px-8 py-4 bg-neutral-700 hover:bg-neutral-600 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 text-neutral-100 shadow-lg hover:shadow-xl border border-neutral-600 flex items-center justify-center gap-2"
                                 >
-                                    💬 Hemen Konuş
+                                    <Send className="h-5 w-5" />
+                                    Hemen Konuş
                                 </button>
                                 <Link 
                                     href="/ai-chat" 
-                                    className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105"
+                                    className="inline-block px-8 py-4 bg-neutral-700 hover:bg-neutral-600 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 text-neutral-100 shadow-lg hover:shadow-xl border border-neutral-600 flex items-center justify-center gap-2"
                                 >
-                                    📱 Tam Sayfa
+                                    <ArrowRight className="h-5 w-5" />
+                                    Tam Sayfa
                                 </Link>
                             </div>
                         ) : (
                             <div className="text-center">
-                                <div className="bg-yellow-900/30 border border-yellow-600 rounded-lg p-4 mb-3">
-                                    <p className="text-yellow-200 text-sm mb-2">
-                                        🔒 AI Assistant'ı kullanmak için giriş yapmanız gerekiyor
+                                <div className="bg-neutral-700 border border-neutral-600 rounded-xl p-6 mb-4">
+                                    <p className="text-neutral-200 text-base mb-2 flex items-center justify-center gap-2">
+                                        <Lock className="h-5 w-5" />
+                                        AI Asistan'ı kullanmak için giriş yapmanız gerekiyor
                                     </p>
-                                    <p className="text-yellow-300 text-xs">
-                                        Güvenliğiniz için AI Assistant sadece kimlik doğrulaması yapılmış kullanıcılara açıktır.
+                                    <p className="text-neutral-400 text-sm">
+                                        Güvenliğiniz için AI Asistan sadece kimlik doğrulaması yapılmış kullanıcılara açıktır.
                                     </p>
                                 </div>
-                                <div className="text-gray-400 text-xs">
-                                    ↑ Yukarıdan giriş yapın veya yeni wallet oluşturun
+                                <div className="text-neutral-400 text-sm flex items-center justify-center gap-1">
+                                    <ArrowRight className="h-4 w-4 rotate-90" />
+                                    Yukarıdan giriş yapın veya yeni wallet oluşturun
                                 </div>
                             </div>
                         )}

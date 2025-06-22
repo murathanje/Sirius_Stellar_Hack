@@ -2,7 +2,7 @@
 
 import { useChat } from 'ai/react';
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2 } from 'lucide-react';
+import { Send, Bot, User, Loader2, Coins, Settings, HelpCircle, Info } from 'lucide-react';
 import TransferHandler from './TransferHandler';
 
 interface ChatMessage {
@@ -44,43 +44,52 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
   if (!isMounted) {
     return (
       <div className="flex items-center justify-center h-[600px]">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#FD973E]" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="max-w-4xl mx-auto bg-neutral-800/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-neutral-700">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">
-        <div className="flex items-center space-x-3">
+      <div className="bg-neutral-700 text-neutral-100 p-6">
+        <div className="flex items-center space-x-4">
           <Bot className="h-8 w-8" />
           <div>
-            <h1 className="text-xl font-bold">Stellar AI Assistant</h1>
-            <p className="text-blue-100 text-sm">Bakiye sorgu ve token transfer yardımcınız</p>
+            <h1 className="text-2xl font-bold">Stellar AI Asistan</h1>
+            <p className="text-neutral-300 text-base">Bakiye sorgu ve token transfer yardımcınız</p>
           </div>
         </div>
       </div>
 
       {/* Chat Messages */}
-      <div className="h-[500px] overflow-y-auto p-4 space-y-4 bg-gray-50">
+      <div className="h-[500px] overflow-y-auto p-6 space-y-4 bg-neutral-900">
         {messages.length === 0 && (
-          <div className="text-center text-gray-500 mt-20">
-            <Bot className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-            <p className="text-lg font-medium mb-2">Stellar AI Assistant'a Hoş Geldiniz!</p>
-            <p className="text-sm mb-4">Size nasıl yardımcı olabilirim?</p>
-            <div className="space-y-2 text-xs text-left max-w-md mx-auto">
-              <div className="bg-white p-3 rounded-lg shadow-sm">
-                <p className="font-medium text-gray-700">💰 Bakiye Sorgulama:</p>
-                <p className="text-gray-600">"GXXXXXXX adresinin bakiyesini kontrol et"</p>
+          <div className="text-center text-neutral-400 mt-20">
+            <Bot className="h-16 w-16 mx-auto mb-6 text-neutral-600" />
+            <p className="text-xl font-medium mb-3 text-neutral-200">Stellar AI Asistan'a Hoş Geldiniz!</p>
+            <p className="text-base mb-6 text-neutral-400">Size nasıl yardımcı olabilirim?</p>
+            <div className="space-y-3 text-sm text-left max-w-md mx-auto">
+              <div className="bg-neutral-800 p-4 rounded-xl shadow-sm border border-neutral-700">
+                <p className="font-medium text-neutral-200 flex items-center gap-2">
+                  <Coins className="h-4 w-4" />
+                  Bakiye Sorgulama:
+                </p>
+                <p className="text-neutral-400">"GXXXXXXX adresinin bakiyesini kontrol et"</p>
               </div>
-              <div className="bg-white p-3 rounded-lg shadow-sm">
-                <p className="font-medium text-gray-700">🚀 Transfer Bilgisi:</p>
-                <p className="text-gray-600">"10 XLM'yi GXXXXXXX adresine nasıl gönderirim?"</p>
+              <div className="bg-neutral-800 p-4 rounded-xl shadow-sm border border-neutral-700">
+                <p className="font-medium text-neutral-200 flex items-center gap-2">
+                  <Send className="h-4 w-4" />
+                  Transfer Bilgisi:
+                </p>
+                <p className="text-neutral-400">"10 XLM'yi GXXXXXXX adresine nasıl gönderirim?"</p>
               </div>
-              <div className="bg-white p-3 rounded-lg shadow-sm">
-                <p className="font-medium text-gray-700">ℹ️ Stellar Hakkında:</p>
-                <p className="text-gray-600">"Stellar nedir?" veya "XLM token nedir?"</p>
+              <div className="bg-neutral-800 p-4 rounded-xl shadow-sm border border-neutral-700">
+                <p className="font-medium text-neutral-200 flex items-center gap-2">
+                  <Info className="h-4 w-4" />
+                  Stellar Hakkında:
+                </p>
+                <p className="text-neutral-400">"Stellar nedir?" veya "XLM token nedir?"</p>
               </div>
             </div>
           </div>
@@ -92,43 +101,44 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`flex items-start space-x-3 max-w-[80%] ${
+              className={`flex items-start space-x-4 max-w-[80%] ${
                 message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
               }`}
             >
               <div
-                className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
                   message.role === 'user'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-300 text-gray-700'
+                    ? 'bg-[#FD973E] text-neutral-900'
+                    : 'bg-neutral-700 text-neutral-200'
                 }`}
               >
                 {message.role === 'user' ? (
-                  <User className="h-4 w-4" />
+                  <User className="h-5 w-5" />
                 ) : (
-                  <Bot className="h-4 w-4" />
+                  <Bot className="h-5 w-5" />
                 )}
               </div>
               
               <div
-                className={`rounded-lg p-3 ${
+                className={`rounded-xl p-4 shadow-sm ${
                   message.role === 'user'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-white border border-gray-200 text-gray-800'
+                    ? 'bg-[#FD973E] text-neutral-900'
+                    : 'bg-neutral-800 border border-neutral-700 text-neutral-100'
                 }`}
               >
                 <div className="whitespace-pre-wrap">{message.content}</div>
                 
                 {/* Tool Invocations Display */}
                 {message.toolInvocations && message.toolInvocations.length > 0 && (
-                  <div className="mt-3 space-y-2">
+                  <div className="mt-4 space-y-3">
                     {message.toolInvocations.map((tool, index) => (
-                      <div key={index} className="bg-gray-100 rounded-md p-2 text-sm">
-                        <div className="font-medium text-gray-700 mb-1">
-                          🔧 {tool.toolName === 'checkBalance' ? 'Bakiye Kontrolü' : 'Transfer İşlemi'}
+                      <div key={index} className="bg-neutral-700 rounded-lg p-3 text-sm border border-neutral-600">
+                        <div className="font-medium text-neutral-200 mb-2 flex items-center gap-2">
+                          <Settings className="h-4 w-4" />
+                          {tool.toolName === 'checkBalance' ? 'Bakiye Kontrolü' : 'Transfer İşlemi'}
                         </div>
                                                  {tool.state === 'result' && tool.result && (
-                           <div className="text-gray-600">
+                           <div className="text-neutral-300">
                              {(tool.result as any).requiresPasskeyAuth ? (
                                <TransferHandler
                                  transferDetails={(tool.result as any).transferDetails}
@@ -159,14 +169,14 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="flex items-start space-x-3">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center">
-                <Bot className="h-4 w-4" />
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-neutral-700 text-neutral-200 flex items-center justify-center">
+                <Bot className="h-5 w-5" />
               </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-3">
-                <div className="flex items-center space-x-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span className="text-gray-600">Düşünüyorum...</span>
+              <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <Loader2 className="h-5 w-5 animate-spin text-[#FD973E]" />
+                  <span className="text-neutral-300">Düşünüyorum...</span>
                 </div>
               </div>
             </div>
@@ -177,32 +187,33 @@ export default function ChatInterface({ activeWallet }: ChatInterfaceProps = {})
       </div>
 
       {/* Input Form */}
-      <div className="border-t border-gray-200 p-4 bg-white">
-        <form onSubmit={handleSubmit} className="flex space-x-3">
+      <div className="border-t border-neutral-700 p-6 bg-neutral-800">
+        <form onSubmit={handleSubmit} className="flex space-x-4">
           <input
             type="text"
             value={input}
             onChange={handleInputChange}
             placeholder="Mesajınızı yazın... (örn: 'GXXXXXXX adresinin bakiyesini kontrol et')"
-            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="flex-1 border border-neutral-600 rounded-xl px-5 py-3 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-[#FD973E] focus:border-transparent transition-all bg-neutral-700"
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+            className="bg-neutral-700 hover:bg-neutral-600 disabled:bg-neutral-800 disabled:cursor-not-allowed text-neutral-100 px-8 py-3 rounded-xl flex items-center space-x-3 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600"
           >
             {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
-              <Send className="h-4 w-4" />
+              <Send className="h-5 w-5" />
             )}
             <span>Gönder</span>
           </button>
         </form>
         
-        <div className="mt-2 text-xs text-gray-500 text-center">
-          💡 Stellar adresleri G harfi ile başlar ve 56 karakter uzunluğundadır
+        <div className="mt-3 text-sm text-neutral-400 text-center flex items-center justify-center gap-2">
+          <HelpCircle className="h-4 w-4" />
+          Stellar adresleri G harfi ile başlar ve 56 karakter uzunluğundadır
         </div>
       </div>
     </div>

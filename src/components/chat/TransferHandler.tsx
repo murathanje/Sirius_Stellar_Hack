@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Loader2, Check, X, AlertTriangle } from 'lucide-react';
+import { Loader2, Check, X, AlertTriangle, Shield, Wallet, ArrowRight, AlertCircle } from 'lucide-react';
 import PasskeyWallet from '@yuesth/passkey-wallet-stellar';
 import { StellarService } from '@/lib/stellar-service';
 
@@ -88,49 +88,50 @@ export default function TransferHandler({ transferDetails, onComplete, onCancel 
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mt-3">
-      <div className="flex items-start space-x-3">
+    <div className="bg-neutral-800/95 backdrop-blur-sm border border-neutral-700 rounded-xl p-4 mt-3 shadow-lg">
+      <div className="flex items-start space-x-4">
         <div className="flex-shrink-0">
-          <AlertTriangle className="h-6 w-6 text-orange-500" />
+          <AlertTriangle className="h-6 w-6 text-[#FD973E]" />
         </div>
         <div className="flex-1">
-          <h4 className="font-semibold text-gray-800 mb-2">
-            🔐 Transfer Onayı Gerekli
+          <h4 className="font-semibold text-neutral-100 mb-3 flex items-center gap-2">
+            <Shield className="h-5 w-5" />
+            Transfer Onayı Gerekli
           </h4>
           
-          <div className="bg-gray-50 rounded p-3 mb-3 text-sm">
-            <div className="space-y-2">
+          <div className="bg-neutral-700 rounded-lg p-4 mb-4 text-sm border border-neutral-600">
+            <div className="space-y-3">
               <div>
-                <strong>Gönderen:</strong>
-                <div className="font-mono text-xs break-all bg-white p-1 rounded mt-1 overflow-hidden">
+                <strong className="text-neutral-200">Gönderen:</strong>
+                <div className="font-mono text-xs break-all bg-neutral-800 p-2 rounded-lg mt-1 overflow-hidden border border-neutral-600">
                   {transferDetails.from.slice(0, 10)}...{transferDetails.from.slice(-10)}
                 </div>
               </div>
               <div>
-                <strong>Alıcı:</strong>
-                <div className="font-mono text-xs break-all bg-white p-1 rounded mt-1 overflow-hidden">
+                <strong className="text-neutral-200">Alıcı:</strong>
+                <div className="font-mono text-xs break-all bg-neutral-800 p-2 rounded-lg mt-1 overflow-hidden border border-neutral-600">
                   {transferDetails.to.slice(0, 10)}...{transferDetails.to.slice(-10)}
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div><strong>Miktar:</strong> {transferDetails.amount} {transferDetails.asset}</div>
-                <div><strong>Wallet:</strong> {transferDetails.walletName}</div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><strong className="text-neutral-200">Miktar:</strong> <span className="text-[#D856FB] font-semibold">{transferDetails.amount} {transferDetails.asset}</span></div>
+                <div><strong className="text-neutral-200">Wallet:</strong> <span className="text-[#FD973E] font-semibold">{transferDetails.walletName}</span></div>
               </div>
             </div>
           </div>
 
           {status && (
-            <div className="mb-3 text-sm text-gray-600 flex items-center space-x-2">
-              {isProcessing && <Loader2 className="h-4 w-4 animate-spin" />}
+            <div className="mb-4 text-sm text-neutral-300 flex items-center space-x-2 bg-neutral-700 p-3 rounded-lg border border-neutral-600">
+              {isProcessing && <Loader2 className="h-4 w-4 animate-spin text-[#FD973E]" />}
               <span>{status}</span>
             </div>
           )}
 
-          <div className="flex space-x-2">
+          <div className="flex space-x-3">
             <button
               onClick={handleTransfer}
               disabled={isProcessing}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded text-sm font-medium flex items-center space-x-1"
+              className="px-6 py-3 bg-neutral-700 hover:bg-neutral-600 disabled:bg-neutral-800 text-neutral-100 rounded-xl text-sm font-medium flex items-center space-x-2 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600"
             >
               {isProcessing ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -143,15 +144,16 @@ export default function TransferHandler({ transferDetails, onComplete, onCancel 
             <button
               onClick={onCancel}
               disabled={isProcessing}
-              className="px-4 py-2 bg-gray-500 hover:bg-gray-600 disabled:bg-gray-400 text-white rounded text-sm font-medium flex items-center space-x-1"
+              className="px-6 py-3 bg-neutral-700 hover:bg-neutral-600 disabled:bg-neutral-800 text-neutral-100 rounded-xl text-sm font-medium flex items-center space-x-2 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 border border-neutral-600"
             >
               <X className="h-4 w-4" />
               <span>İptal</span>
             </button>
           </div>
 
-          <div className="mt-2 text-xs text-gray-500">
-            ⚠️ Bu işlem gerçek bir blockchain transferidir ve geri alınamaz.
+          <div className="mt-3 text-xs text-neutral-400 bg-neutral-700 p-3 rounded-lg border border-neutral-600 flex items-center gap-2">
+            <AlertCircle className="h-4 w-4" />
+            Bu işlem gerçek bir blockchain transferidir ve geri alınamaz.
           </div>
         </div>
       </div>
